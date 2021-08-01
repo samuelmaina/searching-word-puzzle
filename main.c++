@@ -10,6 +10,10 @@ bool remainingFoundToTheRight(int row, int column, string word, vector<string> &
 
 bool remainingFoundToTheLeft(int row, int column, string word, vector<string> &string_to_search);
 
+bool remainingFoundUpwards(int row, int column, string word, vector<string> &string_to_search);
+
+bool remainingFoundDownwards(int row, int column, string word, vector<string> &string_to_search);
+
 void readFileAndWriteInto1DArray(string file_name, vector<string> &array);
 
 void printArrayContent(vector<string> &array);
@@ -37,6 +41,7 @@ void searchAndPrintSearchResults(string word, vector<string> &word_puzzle)
 {
     bool found = false;
     int foundRow, foundColumn;
+    string foundDirection;
     for (int i = 0; i < word_puzzle.size(); i++)
     {
         for (int j = 0; j < word_puzzle[i].size(); j++)
@@ -48,12 +53,26 @@ void searchAndPrintSearchResults(string word, vector<string> &word_puzzle)
                 foundColumn = j;
                 if (remainingFoundToTheRight(i, j, word, word_puzzle))
                 {
+                    foundDirection = "right";
                     found = true;
                     //word found,no need to search in other directions.
                     break;
                 }
                 if (remainingFoundToTheLeft(i, j, word, word_puzzle))
                 {
+                    foundDirection = "left";
+                    found = true;
+                    break;
+                }
+                if (remainingFoundUpwards(i, j, word, word_puzzle))
+                {
+                    foundDirection = "up";
+                    found = true;
+                    break;
+                }
+                if (remainingFoundDownwards(i, j, word, word_puzzle))
+                {
+                    foundDirection = "down";
                     found = true;
                     break;
                 }
@@ -65,7 +84,7 @@ void searchAndPrintSearchResults(string word, vector<string> &word_puzzle)
     }
     if (found)
     {
-        cout << word << ", Found at line " << foundRow << " , location " << foundColumn << endl;
+        cout << word << ", Found at line " << foundRow << " , location " << foundColumn << ", going " << foundDirection << endl;
     }
     else
     {
@@ -115,14 +134,12 @@ bool remainingFoundToTheLeft(int row, int column, string word, vector<string> &s
     int starting_index = column;
     int found_column = column;
 
-    //prevent going out of bound. Ensure that there is enough positions to search for the remaining chars.
     if (starting_index - word_size < -1)
     {
         return false;
     }
     else
     {
-        //start from 1 since  the first char of the word was found previosly.
         for (int k = 1; k < word_size; k++)
         {
             //start to search in the next position.
@@ -134,6 +151,62 @@ bool remainingFoundToTheLeft(int row, int column, string word, vector<string> &s
         }
     }
 
+    return true;
+}
+
+bool remainingFoundUpwards(int row, int column, string word, vector<string> &string_to_search)
+{
+    int word_size = word.size();
+
+    int starting_index = row;
+    int found_column = column;
+
+    //prevent going out of bound. Ensure that there is enough positions to search for the remaining chars.
+    if (starting_index - word_size < -1)
+    {
+        return false;
+    }
+    else
+    {
+        //start from 1 since  the first char of the word was found previosly.
+        for (int k = 1; k < word_size; k++)
+        {
+            //start to search in the next  upword position.
+            starting_index--;
+            if (word[k] != string_to_search[starting_index][column])
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool remainingFoundDownwards(int row, int column, string word, vector<string> &string_to_search)
+{
+    int word_size = word.size();
+
+    int starting_index = row;
+    int found_column = column;
+
+    //prevent going out of bound. Ensure that there is enough positions to search for the remaining chars.
+    if (starting_index + word_size > string_to_search.size())
+    {
+        return false;
+    }
+    else
+    {
+        //start from 1 since  the first char of the word was found previosly.
+        for (int k = 1; k < word_size; k++)
+        {
+            //start to search in the next  upword position.
+            starting_index++;
+            if (word[k] != string_to_search[starting_index][column])
+            {
+                return false;
+            }
+        }
+    }
     return true;
 }
 
