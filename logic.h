@@ -149,3 +149,92 @@ bool remainingFoundNorthEast(int row, int column, string word, vector<string> &s
     }
     return true;
 }
+
+bool remainingFoundNorthWest(int row, int column, string word, vector<string> &string_to_search)
+{
+    int word_size = word.size();
+
+    int starting_index = row;
+    int found_column = column;
+
+    //prevent going out of bound. Ensure that there is enough positions to search for the remaining chars.
+    if (row - word_size < -1 || column - word_size < -1)
+    {
+        return false;
+    }
+    else
+    {
+        //start from 1 since  the first char of the word was found previosly.
+        for (int k = 1; k < word_size; k++)
+        {
+            if (word[k] != string_to_search[row - k][column - k])
+            {
+                return false;
+            }
+        }
+    }
+
+    for (int k = 0; k < word_size; k++)
+    {
+        string_to_search[row - k][column - k] = '.';
+    }
+    return true;
+}
+
+bool remainingFoundSouthWest(int row, int column, string word, vector<string> &string_to_search)
+{
+    int word_size = word.size();
+    int found_column = column;
+
+    //prevent going out of bound. Ensure that there is enough positions to search for the remaining chars.
+    if (row + word_size > string_to_search.size() || column - word_size < -1)
+    {
+        return false;
+    }
+    else
+    {
+        //start from 1 since  the first char of the word was found previosly.
+        for (int k = 1; k < word_size; k++)
+        {
+            if (word[k] != string_to_search[row + k][column - k])
+            {
+                return false;
+            }
+        }
+    }
+
+    for (int k = 0; k < word_size; k++)
+    {
+        string_to_search[row + k][column - k] = '.';
+    }
+    return true;
+}
+
+bool remainingFoundSouthEast(int row, int column, string word, vector<string> &string_to_search)
+{
+    int word_size = word.size();
+    int found_column = column;
+
+    //prevent going out of bound. Ensure that there is enough positions to search for the remaining chars.
+    if (row + word_size > string_to_search.size() || column + word_size > string_to_search[row].size())
+    {
+        return false;
+    }
+    else
+    {
+        //start from 1 since  the first char of the word was found previosly.
+        for (int k = 1; k < word_size; k++)
+        {
+            if (word[k] != string_to_search[row + k][column + k])
+            {
+                return false;
+            }
+        }
+    }
+
+    for (int k = 0; k < word_size; k++)
+    {
+        string_to_search[row + k][column + k] = '.';
+    }
+    return true;
+}
