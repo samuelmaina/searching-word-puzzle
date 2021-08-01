@@ -14,6 +14,8 @@ bool remainingFoundUpwards(int row, int column, string word, vector<string> &str
 
 bool remainingFoundDownwards(int row, int column, string word, vector<string> &string_to_search);
 
+bool remainingFoundNorthEast(int row, int column, string word, vector<string> &string_to_search);
+
 void readFileAndWriteInto1DArray(string file_name, vector<string> &array);
 
 void printArrayContent(vector<string> &array);
@@ -73,6 +75,12 @@ void searchAndPrintSearchResults(string word, vector<string> &word_puzzle)
                 if (remainingFoundDownwards(i, j, word, word_puzzle))
                 {
                     foundDirection = "down";
+                    found = true;
+                    break;
+                }
+                if (remainingFoundNorthEast(i, j, word, word_puzzle))
+                {
+                    foundDirection = "north-east";
                     found = true;
                     break;
                 }
@@ -202,6 +210,32 @@ bool remainingFoundDownwards(int row, int column, string word, vector<string> &s
             //start to search in the next  upword position.
             starting_index++;
             if (word[k] != string_to_search[starting_index][column])
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool remainingFoundNorthEast(int row, int column, string word, vector<string> &string_to_search)
+{
+    int word_size = word.size();
+
+    int starting_index = row;
+    int found_column = column;
+
+    //prevent going out of bound. Ensure that there is enough positions to search for the remaining chars.
+    if (row - word_size < -1 || column + word_size > string_to_search[row].size())
+    {
+        return false;
+    }
+    else
+    {
+        //start from 1 since  the first char of the word was found previosly.
+        for (int k = 1; k < word_size; k++)
+        {
+            if (word[k] != string_to_search[row - k][column + k])
             {
                 return false;
             }
