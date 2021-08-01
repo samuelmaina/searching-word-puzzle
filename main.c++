@@ -6,7 +6,9 @@ using namespace std;
 
 void searchAndPrintSearchResults(string word, vector<string> &word_puzzle);
 
-bool remainingFoundToTheRIght(int row, int column, string word, vector<string> &word_puzzle);
+bool remainingFoundToTheRight(int row, int column, string word, vector<string> &word_puzzle);
+
+bool remainingFoundToTheLeft(int row, int column, string word, vector<string> &string_to_search);
 
 void readFileAndWriteInto1DArray(string file_name, vector<string> &array);
 
@@ -39,14 +41,20 @@ void searchAndPrintSearchResults(string word, vector<string> &word_puzzle)
     {
         for (int j = 0; j < word_puzzle[i].size(); j++)
         {
+            //found the first letter of the word in the grid.
             if (word[0] == word_puzzle[i][j])
             {
                 foundRow = i;
                 foundColumn = j;
-                if (remainingFoundToTheRIght(i, j, word, word_puzzle))
+                if (remainingFoundToTheRight(i, j, word, word_puzzle))
                 {
                     found = true;
                     //word found,no need to search in other directions.
+                    break;
+                }
+                if (remainingFoundToTheLeft(i, j, word, word_puzzle))
+                {
+                    found = true;
                     break;
                 }
             }
@@ -65,7 +73,7 @@ void searchAndPrintSearchResults(string word, vector<string> &word_puzzle)
     }
 }
 
-bool remainingFoundToTheRIght(int row, int column, string word, vector<string> &word_puzzle)
+bool remainingFoundToTheRight(int row, int column, string word, vector<string> &word_puzzle)
 {
 
     bool found;
@@ -95,10 +103,37 @@ bool remainingFoundToTheRIght(int row, int column, string word, vector<string> &
         }
     }
 
-    for (int k = 0; k < word_size; k++)
+    return true;
+}
+
+bool remainingFoundToTheLeft(int row, int column, string word, vector<string> &string_to_search)
+{
+    string search_string = string_to_search[row];
+
+    int word_size = word.size();
+
+    int starting_index = column;
+    int found_column = column;
+
+    //prevent going out of bound. Ensure that there is enough positions to search for the remaining chars.
+    if (starting_index - word_size < -1)
     {
-        word_puzzle[row][column + k] = '.';
+        return false;
     }
+    else
+    {
+        //start from 1 since  the first char of the word was found previosly.
+        for (int k = 1; k < word_size; k++)
+        {
+            //start to search in the next position.
+            starting_index--;
+            if (word[k] != search_string[starting_index])
+            {
+                return false;
+            }
+        }
+    }
+
     return true;
 }
 
