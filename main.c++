@@ -4,6 +4,10 @@
 
 using namespace std;
 
+void searchAndPrintSearchResults(string word, vector<string> &word_puzzle);
+
+bool remainingFoundToTheRIght(int row, int column, string word, vector<string> &word_puzzle);
+
 void readFileAndWriteInto1DArray(string file_name, vector<string> &array);
 
 void printArrayContent(vector<string> &array);
@@ -19,7 +23,83 @@ int main(int argc, char const *argv[])
     vector<string> word_puzzle;
     readFileAndWriteInto1DArray(word_puzzle_file, word_puzzle);
     printArrayContent(word_puzzle);
+
+    for (auto word : search_words)
+    {
+        searchAndPrintSearchResults(word, word_puzzle);
+    }
     return 0;
+}
+
+void searchAndPrintSearchResults(string word, vector<string> &word_puzzle)
+{
+    bool found = false;
+    int foundRow, foundColumn;
+    for (int i = 0; i < word_puzzle.size(); i++)
+    {
+        for (int j = 0; j < word_puzzle[i].size(); j++)
+        {
+            if (word[0] == word_puzzle[i][j])
+            {
+                foundRow = i;
+                foundColumn = j;
+                if (remainingFoundToTheRIght(i, j, word, word_puzzle))
+                {
+                    found = true;
+                    //word found,no need to search in other directions.
+                    break;
+                }
+            }
+        }
+        //word found in the current row hence no need to continue to the next row.
+        if (found)
+            break;
+    }
+    if (found)
+    {
+        cout << word << ", Found at line " << foundRow << " , location " << foundColumn << endl;
+    }
+    else
+    {
+        cout << word << ", Not Found" << endl;
+    }
+}
+
+bool remainingFoundToTheRIght(int row, int column, string word, vector<string> &word_puzzle)
+{
+
+    bool found;
+    string search_string = word_puzzle[row];
+
+    int word_size = word.size();
+
+    int starting_index = column;
+    int found_column = column;
+
+    //prevent going out of bound. Ensure that there is enough positions to search for the remaining chars.
+    if (word_size + starting_index > search_string.size())
+    {
+        return false;
+    }
+    else
+    {
+        //start from 1 since  the first char of the word was found previosly.
+        for (int k = 1; k < word_size; k++)
+        {
+            //start to search in the next position.
+            starting_index++;
+            if (word[k] != search_string[starting_index])
+            {
+                return false;
+            }
+        }
+    }
+
+    for (int k = 0; k < word_size; k++)
+    {
+        word_puzzle[row][column + k] = '.';
+    }
+    return true;
 }
 
 void readFileAndWriteInto1DArray(string file_name, vector<string> &array)
