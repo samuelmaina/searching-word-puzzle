@@ -73,6 +73,24 @@ void searchAndPrintSearchResults(string word, vector<string> &word_puzzle)
                     found = true;
                     break;
                 }
+                if (remainingFoundNorthWest(i, j, word, word_puzzle))
+                {
+                    foundDirection = "north-west";
+                    found = true;
+                    break;
+                }
+                if (remainingFoundSouthWest(i, j, word, word_puzzle))
+                {
+                    foundDirection = "south-west";
+                    found = true;
+                    break;
+                }
+                if (remainingFoundSouthEast(i, j, word, word_puzzle))
+                {
+                    foundDirection = "south-east";
+                    found = true;
+                    break;
+                }
             }
         }
         //word found in the current row hence no need to continue to the next row.
